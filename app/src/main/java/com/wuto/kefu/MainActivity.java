@@ -11,6 +11,12 @@ import com.alibaba.mobileim.YWIMKit;
 import com.alibaba.mobileim.YWLoginParam;
 import com.alibaba.mobileim.channel.event.IWxCallback;
 import com.alibaba.mobileim.conversation.EServiceContact;
+import com.alibaba.mobileim.gingko.model.tribe.YWTribe;
+import com.alibaba.mobileim.gingko.model.tribe.YWTribeType;
+import com.alibaba.mobileim.tribe.YWTribeCreationParam;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,7 +62,29 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent3);
 
                 break;
-            case R.id.btn_5://客服聊天
+            case R.id.btn_5://创建群
+//IYWTribeService.createTribe，创建一个群，可以指定群名称和群公告，群名称必须不能为空，同时指定群成员列表，参数为List<String>，用户ID号。
+//                创建成功后，会返回IYWTribe。
+                YWTribeCreationParam tribeCreationParam = new YWTribeCreationParam();
+//群名称
+                tribeCreationParam.setTribeName("tribeName");
+//群公告
+                tribeCreationParam.setNotice("notice");
+//群类型，普通群
+                tribeCreationParam.setTribeType(YWTribeType.CHATTING_GROUP);
+                final List<String> userList = new ArrayList<String>();
+
+                userList.add("user2");//群成员
+                tribeCreationParam.setUsers(userList);
+
+                tribeService.createTribe(new MyCallback() {
+                    @Override
+                    public void onSuccess(Object... result) {
+                        // 返回值为刚刚成功创建的群
+                        YWTribe tribe = (YWTribe) result[0];
+                        tribe.getTribeId();// 群ID，用于唯一标识一个群
+                    }
+                }, tribeCreationParam);
 
             default:
                 break;
